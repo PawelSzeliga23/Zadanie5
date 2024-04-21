@@ -34,4 +34,11 @@ public class AnimalController : ControllerBase
         var success = _animalService.DeleteAnimal(id);
         return success ? StatusCode(StatusCodes.Status204NoContent) : NotFound();
     }
+
+    [HttpPut]
+    public IActionResult UpdateAnimal([FromQuery] int id, [FromBody] UpdateAnimalDTO dto)
+    {
+        var success = _animalService.UpdateAnimal(id, dto);
+        return success ? StatusCode(StatusCodes.Status204NoContent) : NotFound();
+    }
 }
