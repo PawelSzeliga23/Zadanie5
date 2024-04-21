@@ -16,11 +16,6 @@ public class AnimalService : IAnimalService
 
     public bool AddAnimal(CreateAnimalDTO dto)
     {
-        if (string.IsNullOrEmpty(dto.Description))
-        {
-            dto.Description = null;
-        }
-
         return _animalRepository.CreateAnimal(dto);
     }
 

@@ -28,7 +28,7 @@ public class AnimalRepository : IAnimalRepository
         {
             var animal = new Animal()
             {
-                Id = (int)reader["Id"],
+                Id = (int)reader["IdAnimal"],
                 Name = reader["Name"].ToString()!,
                 Description = reader["Description"].ToString(),
                 Category = reader["Category"].ToString()!,
@@ -50,7 +50,14 @@ public class AnimalRepository : IAnimalRepository
                 "INSERT INTO Animal (Name, Description, Category, Area) VALUES (@Name, @Description, @Category, @Area)",
                 connection);
         command.Parameters.AddWithValue("@Name", dto.Name);
-        command.Parameters.AddWithValue("@Description", dto.Description);
+        if (string.IsNullOrEmpty(dto.Description))
+        {
+            command.Parameters.AddWithValue("@Description", DBNull.Value);
+        }
+        else
+        {
+            command.Parameters.AddWithValue("@Description", dto.Description);
+        }
         command.Parameters.AddWithValue("@Category", dto.Category);
         command.Parameters.AddWithValue("@Area", dto.Area);
         var affectedRows = command.ExecuteNonQuery();
@@ -66,7 +73,14 @@ public class AnimalRepository : IAnimalRepository
                 "UPDATE Animal SET Name = @Name, Description = @Description, Category = @Category,Area = @Area WHERE IdAnimal = @IdAnimal",
                 connection);
         command.Parameters.AddWithValue("@Name", dto.Name);
-        command.Parameters.AddWithValue("@Description", dto.Description);
+        if (string.IsNullOrEmpty(dto.Description))
+        {
+            command.Parameters.AddWithValue("@Description", DBNull.Value);
+        }
+        else
+        {
+            command.Parameters.AddWithValue("@Description", dto.Description);
+        }
         command.Parameters.AddWithValue("@Category", dto.Category);
         command.Parameters.AddWithValue("@Area", dto.Area);
         command.Parameters.AddWithValue("@IdAnimal", id);
@@ -78,7 +92,7 @@ public class AnimalRepository : IAnimalRepository
     {
         using var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]);
         connection.Open();
-        using var command = new SqlCommand($"DELETE FROM ANIMAL WHERE IdAnimal = @ID");
+        using var command = new SqlCommand($"DELETE FROM ANIMAL WHERE IdAnimal = @ID",connection);
         command.Parameters.AddWithValue("@ID", id);
         var affectedRows = command.ExecuteNonQuery();
         return affectedRows == 1;
